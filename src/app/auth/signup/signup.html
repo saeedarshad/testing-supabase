@@ -1,0 +1,160 @@
+<div class="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+  <div class="max-w-md w-full space-y-8">
+    <div class="text-center">
+      <h2 class="mt-6 text-3xl font-extrabold text-gray-900">
+        Create your account
+      </h2>
+      <p class="mt-2 text-sm text-gray-600">
+        Or
+        <a routerLink="/auth/login" class="font-medium text-blue-600 hover:text-blue-500">
+          sign in to your existing account
+        </a>
+      </p>
+    </div>
+    
+    <p-card class="w-full">
+      <form [formGroup]="signupForm" (ngSubmit)="onSubmit()" class="space-y-6">
+        
+        @if (errorMessage()) {
+          <p-message severity="error" [text]="errorMessage()" styleClass="w-full"></p-message>
+        }
+
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label for="firstName" class="block text-sm font-medium text-gray-700">First Name</label>
+            <div class="mt-1">
+              <input 
+                pInputText 
+                id="firstName" 
+                formControlName="firstName" 
+                type="text" 
+                class="w-full"
+                [class.ng-invalid]="firstName?.invalid && firstName?.touched"
+                placeholder="Enter first name"
+              />
+              @if (firstName?.invalid && firstName?.touched) {
+                <small class="text-red-600 mt-1 block">
+                  @if (firstName?.errors?.['required']) {
+                    First name is required
+                  }
+                  @if (firstName?.errors?.['minlength']) {
+                    Minimum 2 characters required
+                  }
+                </small>
+              }
+            </div>
+          </div>
+
+          <div>
+            <label for="lastName" class="block text-sm font-medium text-gray-700">Last Name</label>
+            <div class="mt-1">
+              <input 
+                pInputText 
+                id="lastName" 
+                formControlName="lastName" 
+                type="text" 
+                class="w-full"
+                [class.ng-invalid]="lastName?.invalid && lastName?.touched"
+                placeholder="Enter last name"
+              />
+              @if (lastName?.invalid && lastName?.touched) {
+                <small class="text-red-600 mt-1 block">
+                  @if (lastName?.errors?.['required']) {
+                    Last name is required
+                  }
+                  @if (lastName?.errors?.['minlength']) {
+                    Minimum 2 characters required
+                  }
+                </small>
+              }
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <label for="email" class="block text-sm font-medium text-gray-700">Email address</label>
+          <div class="mt-1">
+            <input 
+              pInputText 
+              id="email" 
+              formControlName="email" 
+              type="email" 
+              autocomplete="email" 
+              class="w-full"
+              [class.ng-invalid]="email?.invalid && email?.touched"
+              placeholder="Enter your email"
+            />
+            @if (email?.invalid && email?.touched) {
+              <small class="text-red-600 mt-1 block">
+                @if (email?.errors?.['required']) {
+                  Email is required
+                }
+                @if (email?.errors?.['email']) {
+                  Please enter a valid email
+                }
+              </small>
+            }
+          </div>
+        </div>
+
+        <div>
+          <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
+          <div class="mt-1">
+            <p-password 
+              formControlName="password" 
+              [feedback]="true"
+              [toggleMask]="true"
+              styleClass="w-full"
+              inputStyleClass="w-full"
+              placeholder="Enter your password"
+            ></p-password>
+            @if (password?.invalid && password?.touched) {
+              <small class="text-red-600 mt-1 block">
+                @if (password?.errors?.['required']) {
+                  Password is required
+                }
+                @if (password?.errors?.['minlength']) {
+                  Password must be at least 6 characters
+                }
+              </small>
+            }
+          </div>
+        </div>
+
+        <div>
+          <label for="confirmPassword" class="block text-sm font-medium text-gray-700">Confirm Password</label>
+          <div class="mt-1">
+            <p-password 
+              formControlName="confirmPassword" 
+              [feedback]="false"
+              [toggleMask]="true"
+              styleClass="w-full"
+              inputStyleClass="w-full"
+              placeholder="Confirm your password"
+            ></p-password>
+            @if (confirmPassword?.invalid && confirmPassword?.touched) {
+              <small class="text-red-600 mt-1 block">
+                @if (confirmPassword?.errors?.['required']) {
+                  Please confirm your password
+                }
+                @if (confirmPassword?.errors?.['passwordMismatch']) {
+                  Passwords do not match
+                }
+              </small>
+            }
+          </div>
+        </div>
+
+        <div>
+          <p-button 
+            type="submit" 
+            label="Create Account" 
+            [loading]="loading()"
+            [disabled]="signupForm.invalid"
+            styleClass="w-full"
+          ></p-button>
+        </div>
+      </form>
+    </p-card>
+  </div>
+</div>

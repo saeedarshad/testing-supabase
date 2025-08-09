@@ -1,0 +1,48 @@
+<p-menubar 
+  [model]="navigationItems" 
+  styleClass="bg-white shadow-sm border-b border-gray-200"
+>
+  <ng-template pTemplate="start">
+    <div class="flex items-center space-x-2">
+      <i class="pi pi-chart-line text-blue-600 text-2xl"></i>
+      <span class="font-bold text-xl text-gray-800">FinanceApp</span>
+    </div>
+  </ng-template>
+  
+  <ng-template pTemplate="end">
+    @if (isAuthenticated()) {
+      <div class="flex items-center space-x-4">
+        <span class="text-sm text-gray-600">
+          Welcome, {{ currentUser()?.firstName }}
+        </span>
+        
+        <p-avatar 
+          [label]="getUserInitials(currentUser())"
+          styleClass="bg-blue-600 text-white cursor-pointer"
+          size="normal"
+          shape="circle"
+          (click)="userMenu.toggle($event)"
+        ></p-avatar>
+        
+        <p-menu 
+          #userMenu 
+          [model]="userMenuItems" 
+          [popup]="true"
+        ></p-menu>
+      </div>
+    } @else {
+      <div class="flex space-x-2">
+        <p-button 
+          label="Login" 
+          routerLink="/auth/login"
+          styleClass="p-button-outlined p-button-sm"
+        ></p-button>
+        <p-button 
+          label="Sign Up" 
+          routerLink="/auth/signup"
+          styleClass="p-button-sm"
+        ></p-button>
+      </div>
+    }
+  </ng-template>
+</p-menubar>

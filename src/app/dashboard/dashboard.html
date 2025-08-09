@@ -1,0 +1,153 @@
+<div class="min-h-screen bg-gray-50 p-6">
+  <div class="max-w-7xl mx-auto">
+    <!-- Header -->
+    <div class="mb-8">
+      <h1 class="text-3xl font-bold text-gray-900">
+        Welcome back, {{ currentUser()?.firstName }}!
+      </h1>
+      <p class="text-gray-600 mt-2">Here's your financial overview</p>
+    </div>
+
+    <!-- Financial Summary Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+      <p-card class="bg-white shadow-sm border border-gray-200">
+        <div class="text-center">
+          <div class="text-3xl font-bold text-green-600">
+            {{ formatCurrency(financeData.totalBalance) }}
+          </div>
+          <div class="text-sm text-gray-500 mt-1">Total Balance</div>
+          <div class="text-xs text-green-600 mt-2">
+            <i class="pi pi-arrow-up mr-1"></i>+2.5% from last month
+          </div>
+        </div>
+      </p-card>
+
+      <p-card class="bg-white shadow-sm border border-gray-200">
+        <div class="text-center">
+          <div class="text-3xl font-bold text-blue-600">
+            {{ formatCurrency(financeData.monthlyIncome) }}
+          </div>
+          <div class="text-sm text-gray-500 mt-1">Monthly Income</div>
+          <div class="text-xs text-blue-600 mt-2">
+            <i class="pi pi-arrow-up mr-1"></i>+1.2% from last month
+          </div>
+        </div>
+      </p-card>
+
+      <p-card class="bg-white shadow-sm border border-gray-200">
+        <div class="text-center">
+          <div class="text-3xl font-bold text-red-600">
+            {{ formatCurrency(financeData.monthlyExpenses) }}
+          </div>
+          <div class="text-sm text-gray-500 mt-1">Monthly Expenses</div>
+          <div class="text-xs text-red-600 mt-2">
+            <i class="pi pi-arrow-down mr-1"></i>-3.1% from last month
+          </div>
+        </div>
+      </p-card>
+
+      <p-card class="bg-white shadow-sm border border-gray-200">
+        <div class="text-center">
+          <div class="text-3xl font-bold text-purple-600">
+            {{ financeData.savingsRate }}%
+          </div>
+          <div class="text-sm text-gray-500 mt-1">Savings Rate</div>
+          <div class="text-xs text-purple-600 mt-2">
+            <i class="pi pi-arrow-up mr-1"></i>+0.8% from last month
+          </div>
+        </div>
+      </p-card>
+    </div>
+
+    <!-- Charts Row -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+      <!-- Income vs Expenses Chart -->
+      <p-card class="bg-white shadow-sm border border-gray-200">
+        <ng-template pTemplate="header">
+          <div class="p-4 border-b">
+            <h3 class="text-lg font-semibold">Income vs Expenses</h3>
+            <p class="text-sm text-gray-600">Last 6 months comparison</p>
+          </div>
+        </ng-template>
+        
+        <div class="h-80">
+          <p-chart 
+            type="line" 
+            [data]="chartData" 
+            [options]="chartOptions"
+            class="h-full"
+          ></p-chart>
+        </div>
+      </p-card>
+
+      <!-- Expense Categories Chart -->
+      <p-card class="bg-white shadow-sm border border-gray-200">
+        <ng-template pTemplate="header">
+          <div class="p-4 border-b">
+            <h3 class="text-lg font-semibold">Expense Categories</h3>
+            <p class="text-sm text-gray-600">Current month breakdown</p>
+          </div>
+        </ng-template>
+        
+        <div class="h-80">
+          <p-chart 
+            type="doughnut" 
+            [data]="expenseChartData" 
+            [options]="chartOptions"
+            class="h-full"
+          ></p-chart>
+        </div>
+      </p-card>
+    </div>
+
+    <!-- Recent Transactions -->
+    <p-card class="bg-white shadow-sm border border-gray-200">
+      <ng-template pTemplate="header">
+        <div class="p-4 border-b flex justify-between items-center">
+          <div>
+            <h3 class="text-lg font-semibold">Recent Transactions</h3>
+            <p class="text-sm text-gray-600">Your latest financial activity</p>
+          </div>
+          <p-button 
+            label="View All" 
+            icon="pi pi-arrow-right"
+            styleClass="p-button-outlined p-button-sm"
+          ></p-button>
+        </div>
+      </ng-template>
+
+      <p-table 
+        [value]="recentTransactions" 
+        [paginator]="false"
+        styleClass="p-datatable-sm"
+      >
+        <ng-template pTemplate="header">
+          <tr>
+            <th>Date</th>
+            <th>Description</th>
+            <th>Category</th>
+            <th>Amount</th>
+            <th>Type</th>
+          </tr>
+        </ng-template>
+        
+        <ng-template pTemplate="body" let-transaction>
+          <tr>
+            <td>{{ transaction.date | date:'MMM dd, yyyy' }}</td>
+            <td>{{ transaction.description }}</td>
+            <td>{{ transaction.category }}</td>
+            <td [class]="transaction.amount >= 0 ? 'text-green-600' : 'text-red-600'">
+              {{ formatCurrency(transaction.amount) }}
+            </td>
+            <td>
+              <p-tag 
+                [value]="transaction.type" 
+                [severity]="getTransactionSeverity(transaction.type)"
+              ></p-tag>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </p-card>
+  </div>
+</div>
